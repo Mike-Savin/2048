@@ -1,4 +1,7 @@
 var items = new Array(4);
+var notOpen = new Array(4);
+
+var won = false;
 
 var count = 0,
 	score = 0,
@@ -22,6 +25,14 @@ Item.prototype.init = function() {
 	items[this.x][this.y] = this;
 };
 
+Item.prototype.reinit = function() {
+	var elem = document.getElementById(this.id);
+	elem.className = "item item_" + this.v + " x" + this.x +" y" + this.y;
+	elem.innerHTML = this.v;
+
+	items[this.x][this.y] = this;
+};
+
 Item.prototype.move = function(x, y) {
 	items[this.x][this.y] = false;
 
@@ -40,17 +51,31 @@ Item.prototype.equals = function(other) {
 Item.prototype.remove = function() {
 	document.getElementById("container").removeChild(document.getElementById(this.id));
 
-	items[this.x][this.y] = false;
-
 	delete this;
 };
 
-window.onload = function() {
+Item.prototype.hasAnyEqualNeighbors = function() {
+	for (var kx = -1; kx < 2; ++kx)
+		for (var ky = -1; ky < 2; ++ky)
+			if (this.x + kx >= 0 &&
+				this.x + kx < 4 &&
+				this.y + ky >= 0 &&
+				this.y + ky < 4 &&
+				!( kx == ky || kx == -ky ) &&
+				this.equals(items[this.x + kx][this.y + ky])
+			)
+				return true;
 
+	return false;
+};
+
+window.onload = function() {
 	for (var i = 0; i < 4; ++i) {
 		items[i] = new Array(4);
+		notOpen[i] = new Array(4);
 		for (var j = 0; j < 4; ++j) {
 			items[i][j] = false;
+			notOpen[i][j] = false;
 		}
 	}
 
@@ -63,6 +88,14 @@ keys = {
 	up: 38,
 	right: 39,
 	down: 40
+}
+
+function unclose() {
+	for (var i = 0; i < 4; ++i) {
+		for (var j = 0; j < 4; ++j) {
+			notOpen[i][j] = false;
+		}
+	}
 }
 
 window.onkeydown = function(e) {
@@ -101,12 +134,17 @@ window.onkeydown = function(e) {
 		if (successMoving) {
 			setTimeout(function() {
 				generateNewItem();
-			}, 300);
+			}, 250);
 			successMoving = false;
 		}
-		for (var i = 0; i < 4; ++i)
-			for (var j = 0; j < 4; ++j)
-				if (items[i][j] && items[i][j].v >= 2048) alert("Поздравляю! Вы победили!");
+
+		unclose();
+
+		if (!won && goodScore())
+			win();
+
+		if (allIsBusy() && !ableForNew())
+			gameOver();
 	}
 }
 
@@ -122,10 +160,11 @@ function doMove(kx, ky, x, y) {
 				x += kx;
 				successMoving = true;
 			}
-			else if ( item.equals(items[x + kx][y]) ) {
+			else if ( item.equals(items[x + kx][y]) && !notOpen[x + kx][y] ) {
 				eq = true;
 				x += kx;
 				temp = items[x][y];
+				notOpen[x][y] = true;
 				break;
 			}
 			else break;
@@ -137,10 +176,11 @@ function doMove(kx, ky, x, y) {
 				y += ky;
 				successMoving = true;
 			}
-			else if ( item.equals(items[x][y + ky]) ) {
+			else if ( item.equals(items[x][y + ky]) && !notOpen[x][y + ky] ) {
 				eq = true;
 				y += ky;
 				temp = items[x][y];
+				notOpen[x][y] = true;
 				break;
 			}
 			else break;
@@ -149,19 +189,24 @@ function doMove(kx, ky, x, y) {
 	item.move(x, y);
 
 	if (eq) {
+		item.v *= 2;
 		var v = item.v;
-		item.remove();
-		temp.remove();
-		new Item(x, y, count++, v * 2);
 
-		score += v*2;
+		score += v;
 		document.getElementById("score").innerHTML = score;
+
+		setTimeout(function() {
+			temp.remove();
+			item.reinit();
+		}, 150);
 
 		successMoving = true;
 	}
 }
 
 function generateNewItem() {
+	if (allIsBusy())
+		return;
 	var x, y;
 	do {
 		x = Math.floor(Math.random() * 4);
@@ -171,4 +216,40 @@ function generateNewItem() {
 	var v = (Math.random() < 0.8) ? 2 : 4;
 
 	new Item(x, y, count++, v);
+}
+
+function allIsBusy() {
+	for (var i = 0; i < 4; ++i)
+		for (var j = 0; j < 4; ++j)
+			if (items[i][j] == false)
+				return false;
+	return true;
+}
+
+function gameOver() {
+	alert("Game Over");
+}
+
+function goodScore() {
+	for (var i = 0; i < 4; ++i) {
+		for (var j = 0; j < 4; ++j) {
+			if (items[i][j] && items[i][j].v >= 2048) {
+				won = true;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+function win() {
+	alert("You win!");
+}
+
+function ableForNew() {
+	for (var i = 0; i < 4; ++i)
+		for (var j = 0; j < 4; ++j)
+			if (items[i][j] != false && items[i][j].hasAnyEqualNeighbors())
+				return true;
+	return false;
 }

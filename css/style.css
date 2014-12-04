@@ -77,28 +77,27 @@ textarea
 }
 
 .score {
-	width: 416px;
-	margin: 10% auto 0;
+	width: 528px;
+	margin: 5% auto 0;
 	font-size: 25px;
 }
 
 .container
 {
-	width: 416px;
-	height: 416px;
-	border: 2px solid #ccc;
-	margin: 10px auto 0;
+	width: 528px;
+	height: 528px;
+	margin: 10px auto 5%;
 	background: #ccc;
 	position: relative;
-	padding: 6px;
+	padding: 8px;
 	border-radius: 4px;
 }
 .back
 {
 	float: left;
-	width: 92px;
-	height: 92px;
-	margin: 4px;
+	width: 112px;
+	height: 112px;
+	margin: 8px;
 	background: #d9d9d9;
 	border-radius: 4px;
 }
@@ -106,23 +105,24 @@ textarea
 .item
 {
 	position: absolute;
-	width: 92px;
-	height: 92px;
+	width: 112px;
+	height: 112px;
 	border-radius: 4px;
 	color: rgba(0,0,0,.5);
-	font-size: 34px;
+	font-size: 44px;
+	font-weight: bold;
 	text-align: center;
-	padding: 28px 0;
+	padding: 35px 0;
 	overflow: hidden;
 	cursor: default;
-	-webkit-transition: all .3s ease-out 0s;
-	-moz-transition: all .3s ease-out 0s;
-	-ms-transition: all .3s ease-out 0s;
-	-o-transition: all .3s ease-out 0s;
-	transition: all .3s ease-out 0s;
+	-webkit-transition: all .15s ease-out 0s;
+	-moz-transition: all .15s ease-out 0s;
+	-ms-transition: all .15s ease-out 0s;
+	-o-transition: all .15s ease-out 0s;
+	transition: all .15s ease-out 0s;
 
-	animation: trans .2s linear 1;
-	-webkit-animation: trans .3s linear 1;
+	animation: trans .15s linear 1;
+	-webkit-animation: trans .15s linear 1;
 }
 
 @keyframes trans {
@@ -147,35 +147,35 @@ textarea
 
 .x0
 {
-	left: 10px;
+	left: 16px;
 }
 .x1
 {
-	left: 110px;
+	left: 144px;
 }
 .x2
 {
-	left: 210px;
+	left: 272px;
 }
 .x3
 {
-	left: 310px;
+	left: 400px;
 }
 .y0
 {
-	top: 10px;
+	top: 16px;
 }
 .y1
 {
-	top: 110px;
+	top: 144px;
 }
 .y2
 {
-	top: 210px;
+	top: 272px;
 }
 .y3
 {
-	top: 310px;
+	top: 400px;
 }
 
 .item_2 {
