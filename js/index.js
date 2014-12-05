@@ -17,7 +17,7 @@ function Item(x, y, id, value) {
 
 Item.prototype.init = function() {
 	var elem = document.createElement("div");
-	elem.className = "item item_" + this.v + " x" + this.x +" y" + this.y;
+	elem.className = "item item-new item_" + this.v + " x" + this.x +" y" + this.y;
 	elem.id = this.id;
 	elem.innerHTML = this.v;
 	document.getElementById("container").appendChild(elem);
@@ -27,8 +27,14 @@ Item.prototype.init = function() {
 
 Item.prototype.reinit = function() {
 	var elem = document.getElementById(this.id);
-	elem.className = "item item_" + this.v + " x" + this.x +" y" + this.y;
+	var container = document.getElementById("container");
+	container.removeChild(elem);
+	elem = document.createElement("div");
+	elem.id = this.id
+	elem.className = "item item_" + this.v + " x" + this.x +" y" + this.y + " double";
 	elem.innerHTML = this.v;
+
+	container.appendChild(elem);
 
 	items[this.x][this.y] = this;
 };
@@ -134,7 +140,7 @@ window.onkeydown = function(e) {
 		if (successMoving) {
 			setTimeout(function() {
 				generateNewItem();
-			}, 250);
+			}, 300);
 			successMoving = false;
 		}
 
@@ -198,7 +204,7 @@ function doMove(kx, ky, x, y) {
 		setTimeout(function() {
 			temp.remove();
 			item.reinit();
-		}, 150);
+		}, 200);
 
 		successMoving = true;
 	}
